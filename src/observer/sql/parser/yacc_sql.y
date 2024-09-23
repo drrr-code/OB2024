@@ -12,6 +12,7 @@
 #include "sql/parser/yacc_sql.hpp"
 #include "sql/parser/lex_sql.h"
 #include "sql/expr/expression.h"
+#include "common/time/date.h"
 
 using namespace std;
 
@@ -89,6 +90,7 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
         INT_T
         STRING_T
         FLOAT_T
+        DATE_T
         HELP
         EXIT
         DOT //QUOTE
@@ -136,6 +138,7 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
 %token <floats> FLOAT
 %token <string> ID
 %token <string> SSS
+%token <string> DATE_TYPE
 //非终结符
 
 /** type 定义了各种解析后的结果输出的是什么类型。类型对应了 union 中的定义的成员变量名称 **/
@@ -360,6 +363,7 @@ type:
     INT_T      { $$ = static_cast<int>(AttrType::INTS); }
     | STRING_T { $$ = static_cast<int>(AttrType::CHARS); }
     | FLOAT_T  { $$ = static_cast<int>(AttrType::FLOATS); }
+    | DATE_T   { $$ = static_cast<int>(AttrType::DATE);}
     ;
 insert_stmt:        /*insert   语句的语法解析树*/
     INSERT INTO ID VALUES LBRACE value value_list RBRACE 
@@ -400,6 +404,21 @@ value:
     |FLOAT {
       $$ = new Value((float)$1);
       @$ = @1;
+    }
+    |DATE_TYPE{
+      char *tmp = common::substr($1,1,strlen($1)-2);
+      std::string str(tmp);
+      Value* value = new Value();
+      int date=string_to_date(str);
+      if(date==-1){
+        yyerror(&@$,sql_string,sql_result,scanner,"date invaid",true);
+        YYERROR;
+      }else{
+        value->set_date(date);
+      }
+      $$=value;
+      free(tmp);
+      free($1);
     }
     |SSS {
       char *tmp = common::substr($1,1,strlen($1)-2);
