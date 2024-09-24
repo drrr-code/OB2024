@@ -411,7 +411,7 @@ value:
       Value* value = new Value();
       int date=string_to_date(str);
       if(date==-1){
-        yyerror(&@$,sql_string,sql_result,scanner,"date invaid",true);
+        yyerror(&@$,sql_string,sql_result,scanner,"date invaid");
         YYERROR;
       }else{
         value->set_date(date);
