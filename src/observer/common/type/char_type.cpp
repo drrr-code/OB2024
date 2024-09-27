@@ -39,7 +39,7 @@ RC CharType::cast_to(const Value &val, AttrType type, Value &result) const
 
 int CharType::cast_cost(AttrType type)
 {
-  if (type == AttrType::CHARS) {
+  if (type == AttrType::CHARS||type==AttrType::DATE) {
     return 0;
   }
   return INT32_MAX;

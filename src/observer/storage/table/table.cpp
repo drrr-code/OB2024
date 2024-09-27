@@ -281,7 +281,12 @@ RC Table::make_record(int value_num, const Value *values, Record &record)
             table_meta_.name(), field->name(), value.to_string().c_str());
         break;
       }
-      rc = set_value_to_record(record_data, real_value, field);
+      if(value.attr_type()==AttrType::CHARS&&field->type()==AttrType::DATE){
+        rc = set_value_to_record(record_data, value, field);
+      }else{
+        rc = set_value_to_record(record_data, real_value, field);
+      }
+      
     } else {
       rc = set_value_to_record(record_data, value, field);
     }

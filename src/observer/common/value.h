@@ -34,6 +34,8 @@ public:
   friend class FloatType;
   friend class BooleanType;
   friend class CharType;
+  friend class DateType;
+  
 
   Value() = default;
 
