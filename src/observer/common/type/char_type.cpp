@@ -48,6 +48,7 @@ int CharType::cast_cost(AttrType type)
 RC CharType::to_string(const Value &val, string &result) const
 {
   stringstream ss;
+  
   ss << val.value_.pointer_value_;
   result = ss.str();
   return RC::SUCCESS;

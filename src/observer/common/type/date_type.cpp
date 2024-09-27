@@ -16,14 +16,13 @@ See the Mulan PSL v2 for more details. */
 
 int DateType::compare(const Value &left, const Value &right) const
 {
-  ASSERT(left.attr_type() == AttrType::INTS, "left type is not integer");
-  ASSERT(right.attr_type() == AttrType::INTS || right.attr_type() == AttrType::FLOATS, "right type is not numeric");
-  if (right.attr_type() == AttrType::INTS) {
-    return common::compare_int((void *)&left.value_.int_value_, (void *)&right.value_.int_value_);
-  } else if (right.attr_type() == AttrType::FLOATS) {
-    return common::compare_float((void *)&left.value_.int_value_, (void *)&right.value_.int_value_);
-  }
-  return INT32_MAX;
+  // if (right.attr_type() == AttrType::INTS) {
+  //   return common::compare_int((void *)&left.value_.int_value_, (void *)&right.value_.int_value_);
+  // } else if (right.attr_type() == AttrType::FLOATS) {
+  //   return common::compare_float((void *)&left.value_.int_value_, (void *)&right.value_.int_value_);
+  // }
+  // return INT32_MAX;
+  return common::compare_int((void *)&left.value_.int_value_, (void *)&right.value_.int_value_);
 }
 
 RC DateType::add(const Value &left, const Value &right, Value &result) const
@@ -69,7 +68,9 @@ RC DateType::set_value_from_str(Value &val, const string &data) const
 RC DateType::to_string(const Value &val, string &result) const
 {
   stringstream ss;
-  ss << val.value_.int_value_;
+   char buf[16] = {0};
+  snprintf(buf,sizeof(buf),"%04d-%02d-%02d",val.value_.int_value_/10000,    (val.value_.int_value_%10000)/100,val.value_.int_value_%100); // 注意这里月份和天数，不足两位时需要填充0
+  ss << buf;
   result = ss.str();
   return RC::SUCCESS;
 }
