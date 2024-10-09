@@ -917,3 +917,17 @@ RC BufferPoolManager::get_buffer_pool(int32_t id, DiskBufferPool *&bp)
   return RC::SUCCESS;
 }
 
+RC BufferPoolManager::remove_file(const char *file_name){
+  RC ret = RC::SUCCESS;
+  //关上文件
+  if((ret=close_file(file_name))!=RC::SUCCESS){
+    LOG_WARN("close file fail. file name=%s", file_name);
+  }else{
+    if( 0 != remove(file_name))
+    {
+      LOG_WARN("remove file fail. file name=%s", file_name);
+      ret = RC::FILE_REMOVE;
+    }
+  }
+  return ret;
+}

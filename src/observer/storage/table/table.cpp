@@ -127,6 +127,45 @@ RC Table::create(Db *db, int32_t table_id, const char *path, const char *name, c
   return rc;
 }
 
+RC Table::drop(const char *dir) 
+{
+  RC rc = RC::SUCCESS;
+  if((rc=sync())!=RC::SUCCESS){
+    LOG_WARN("Failed to sync table %s to disk.", name());
+  }else{
+    std::string meta_file=table_meta_file(dir,name());
+    if(0!=unlink(meta_file.c_str())){
+      LOG_WARN("unable to delete %s meta file", name());
+      rc = RC::DELETE_META_FILE_ERROR;
+    }else{
+      const int index_num=table_meta_.index_num();
+      for(int i=0;i<index_num;i++){
+        ((BplusTreeIndex*)indexes_[i])->close();
+        const IndexMeta* index_meta=table_meta_.index(i);
+        if(index_meta!=nullptr){
+          std::string index_file=table_index_file(dir,name(),index_meta->name());
+          if(0!=unlink(index_file.c_str())){
+            LOG_WARN("unable to delete %s meta file", name());
+            rc = RC::DELETE_META_FILE_ERROR;
+            break;
+          }
+        }
+      }
+    }
+  }
+  if(rc==RC::SUCCESS){
+    //删除这个表的记录操作
+    record_handler_->close();
+    delete record_handler_;
+    record_handler_=nullptr;
+    //删除表相关的data file
+    std::string data_file=table_data_file(dir,name());
+    BufferPoolManager &bpm       = db_->buffer_pool_manager();
+    rc=bpm.remove_file(data_file.c_str());
+  }
+  return rc;
+}
+
 RC Table::open(Db *db, const char *meta_file, const char *base_dir)
 {
   // 加载元数据文件
