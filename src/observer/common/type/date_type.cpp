@@ -27,25 +27,25 @@ int DateType::compare(const Value &left, const Value &right) const
 
 RC DateType::add(const Value &left, const Value &right, Value &result) const
 {
-  result.set_int(left.get_int() + right.get_int());
+  result.set_date(left.get_int() + right.get_int());
   return RC::SUCCESS;
 }
 
 RC DateType::subtract(const Value &left, const Value &right, Value &result) const
 {
-  result.set_int(left.get_int() - right.get_int());
+  result.set_date(left.get_int() - right.get_int());
   return RC::SUCCESS;
 }
 
 RC DateType::multiply(const Value &left, const Value &right, Value &result) const
 {
-  result.set_int(left.get_int() * right.get_int());
+  result.set_date(left.get_int() * right.get_int());
   return RC::SUCCESS;
 }
 
 RC DateType::negative(const Value &val, Value &result) const
 {
-  result.set_int(-val.get_int());
+  result.set_date(-val.get_int());
   return RC::SUCCESS;
 }
 
@@ -60,7 +60,7 @@ RC DateType::set_value_from_str(Value &val, const string &data) const
   if (!deserialize_stream || !deserialize_stream.eof()) {
     rc = RC::SCHEMA_FIELD_TYPE_MISMATCH;
   } else {
-    val.set_int(int_value);
+    val.set_date(int_value);
   }
   return rc;
 }
@@ -76,12 +76,12 @@ RC DateType::to_string(const Value &val, string &result) const
 }
 RC DateType::data_max(const Value &left, const Value &right, Value &result)const
 {
-  result.set_int(std::max(left.get_int(), right.get_int()));
+  result.set_date(std::max(left.get_int(), right.get_int()));
   return RC::SUCCESS;
 }
 
 RC DateType::data_min(const Value &left, const Value &right, Value &result)const
 {
-  result.set_int(std::min(left.get_int(), right.get_int()));
+  result.set_date(std::min(left.get_int(), right.get_int()));
   return RC::SUCCESS;
 }
