@@ -83,3 +83,14 @@ RC FloatType::to_string(const Value &val, string &result) const
   result = ss.str();
   return RC::SUCCESS;
 }
+RC FloatType::data_max(const Value &left, const Value &right, Value &result)const
+{
+  result.set_float(std::max(left.get_float(), right.get_float()));
+  return RC::SUCCESS;
+}
+
+RC FloatType::data_min(const Value &left, const Value &right, Value &result)const
+{
+  result.set_float(std::min(left.get_float(), right.get_float()));
+  return RC::SUCCESS;
+}

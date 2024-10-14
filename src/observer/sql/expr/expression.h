@@ -435,6 +435,7 @@ public:
     AVG,
     MAX,
     MIN,
+    UNDEFIND
   };
 
 public:

@@ -52,6 +52,27 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
   return expr;
 }
 
+AggregateExpr::Type get_agg_type(char* func_name)
+{
+  int len=strlen(func_name);
+  for(int i=0;i<len;i++){
+    func_name[i]=tolower(func_name[i]);
+  }
+  if(strcmp(func_name,"max")==0){
+    return AggregateExpr::Type::MAX;
+  }else if(strcmp(func_name,"min")==0){
+    return AggregateExpr::Type::MIN;
+  }else if(strcmp(func_name,"count")==0){
+    return AggregateExpr::Type::COUNT;
+  }else if(strcmp(func_name,"avg")==0){
+    return AggregateExpr::Type::AVG;
+  }else if(strcmp(func_name,"sum")==0){
+    return AggregateExpr::Type::SUM;
+  }else{
+    return AggregateExpr::Type::UNDEFIND;
+  }
+}
+
 %}
 
 %define api.pure full
@@ -113,6 +134,11 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
         LE
         GE
         NE
+        AGGR_MAX
+        AGGR_MIN
+        AGGR_SUM
+        AGGR_AVG
+        AGGR_COUNT
 
 /** union 中定义各种数据类型，真实生成的代码也是union类型，所以不能有非POD类型的数据 **/
 %union {
@@ -157,6 +183,7 @@ UnboundAggregateExpr *create_aggregate_expression(const char *aggregate_name,
 %type <string>              storage_format
 %type <relation_list>       rel_list
 %type <expression>          expression
+%type <expression>          aggr_func_expr
 %type <expression_list>     expression_list
 %type <expression_list>     group_by
 %type <sql_node>            calc_stmt
@@ -549,9 +576,30 @@ expression:
     | '*' {
       $$ = new StarExpr();
     }
+    | aggr_func_expr {
+      $$ = $1; // AggrFuncExpr
+    }
     // your code here
     ;
-
+aggr_func_expr:
+  ID LBRACE expression RBRACE
+  {
+    Expression* child_expr = $3;
+    if($3->type()==ExprType::FIELD){
+      FieldExpr* field_expr = static_cast<FieldExpr*>($3);
+      if(strcmp(field_expr->field_name(),"*")==0){
+        if(get_agg_type($1)!=AggregateExpr::Type::COUNT){
+          delete $3;
+          YYERROR;
+        }
+        child_expr = new StarExpr(field_expr->table_name());
+        delete $3;
+      }
+    }
+    $$ = new UnboundAggregateExpr($1, child_expr);
+    $$->set_name(token_name(sql_string, &@$));
+  }
+  ;
 rel_attr:
     ID {
       $$ = new RelAttrSqlNode;

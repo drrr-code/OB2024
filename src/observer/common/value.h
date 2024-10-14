@@ -81,6 +81,14 @@ public:
     return DataType::type_instance(result.attr_type())->negative(value, result);
   }
 
+  static RC data_max(const Value &left, const Value &right, Value &result){
+    return DataType::type_instance(result.attr_type())->data_max(left, right, result);
+  }
+
+  static RC data_min(const Value &left, const Value &right, Value &result){
+    return DataType::type_instance(result.attr_type())->data_min(left, right, result);
+  }
+
   static RC cast_to(const Value &value, AttrType to_type, Value &result)
   {
     return DataType::type_instance(value.attr_type())->cast_to(value, to_type, result);
@@ -100,6 +108,37 @@ public:
 
   int      length() const { return length_; }
   AttrType attr_type() const { return attr_type_; }
+  RC type_can_cast(AttrType target_type){
+    if(attr_type_==target_type){
+      return RC::SUCCESS;
+    }else if(target_type==AttrType::DATE){
+      return RC::SUCCESS;
+    }
+    switch (target_type)
+    {
+      case AttrType::INTS:
+      {
+        int tmp = get_int();
+        set_int(tmp);
+      }
+        break;
+      case AttrType::FLOATS:
+      {
+        float tmp = get_float();
+        set_float(tmp);
+      }
+        break;
+      case AttrType::CHARS:
+      {
+        std::string tmp = get_string();
+        set_string(tmp.c_str());
+      }
+        break;
+      default:
+        break;
+    }
+    return RC::SUCCESS;
+  }
 
 public:
   /**
@@ -111,10 +150,11 @@ public:
   string get_string() const;
   bool   get_boolean() const;
   void set_date(int date);
+  void set_int(int val);
 
 private:
-  void set_int(int val);
   void set_float(float val);
+  
   void set_string(const char *s, int len = 0);
   void set_string_from_other(const Value &other);
   

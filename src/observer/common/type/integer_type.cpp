@@ -73,3 +73,21 @@ RC IntegerType::to_string(const Value &val, string &result) const
   result = ss.str();
   return RC::SUCCESS;
 }
+
+RC IntegerType::data_max(const Value &left, const Value &right, Value &result)const
+{
+  result.set_int(std::max(left.get_int(), right.get_int()));
+  return RC::SUCCESS;
+}
+
+RC IntegerType::data_min(const Value &left, const Value &right, Value &result)const
+{
+  result.set_int(std::min(left.get_int(), right.get_int()));
+  return RC::SUCCESS;
+}
+RC IntegerType::divide(const Value &left, const Value &right, Value &result) const
+{
+  ASSERT(right.get_int()!=0,"count num is 0");
+  result.set_float(left.get_int() / right.get_int());
+  return RC::SUCCESS;
+}

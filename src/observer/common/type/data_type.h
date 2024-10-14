@@ -72,6 +72,8 @@ public:
    */
   virtual RC negative(const Value &val, Value &result) const { return RC::UNSUPPORTED; }
 
+  virtual RC data_max(const Value &left, const Value &right, Value &result) const { return RC::UNSUPPORTED; }
+  virtual RC data_min(const Value &left, const Value &right, Value &result) const { return RC::UNSUPPORTED; }
   /**
    * @brief 将 val 转换为 type 类型，并将结果保存到 result 中
    */

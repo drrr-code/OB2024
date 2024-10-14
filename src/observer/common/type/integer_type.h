@@ -27,6 +27,9 @@ public:
   RC add(const Value &left, const Value &right, Value &result) const override;
   RC subtract(const Value &left, const Value &right, Value &result) const override;
   RC multiply(const Value &left, const Value &right, Value &result) const override;
+  RC divide(const Value &left, const Value &right, Value &result) const override;
+  RC data_max(const Value &left, const Value &right, Value &result) const override;
+  RC data_min(const Value &left, const Value &right, Value &result) const override;
   RC negative(const Value &val, Value &result) const override;
 
   RC set_value_from_str(Value &val, const string &data) const override;

@@ -22,6 +22,7 @@ See the Mulan PSL v2 for more details. */
 
 class Expression;
 
+typedef enum { AGG_MAX, AGG_MIN, AGG_COUNT, AGG_AVG, AGG_SUM, AGGR_FUNC_UNDEFIND } AggrFuncType;
 /**
  * @defgroup SQLParser SQL Parser
  */
@@ -131,8 +132,8 @@ struct DeleteSqlNode
 struct UpdateSqlNode
 {
   std::string                   relation_name;   ///< Relation to update
-  std::string                   attribute_name;  ///< 更新的字段，仅支持一个字段
-  Value                         value;           ///< 更新的值，仅支持一个字段
+  std::string                   attribute_name;  ///< 更新的字段，支持多个字段
+  Value                         value;           ///< 更新的值，支持多个字段
   std::vector<ConditionSqlNode> conditions;
 };
 

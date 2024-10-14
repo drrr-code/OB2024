@@ -383,6 +383,9 @@ RC check_aggregate_expression(AggregateExpr &expression)
     case AggregateExpr::Type::MIN: {
       // 任何类型都支持
     } break;
+    case AggregateExpr::Type::UNDEFIND:{
+
+    }break;
   }
 
   // 子表达式中不能再包含聚合表达式
