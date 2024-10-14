@@ -33,4 +33,6 @@ public:
   int cast_cost(AttrType type) override;
 
   RC to_string(const Value &val, string &result) const override;
+  RC data_max(const Value &left, const Value &right, Value &result) const override;
+  RC data_min(const Value &left, const Value &right, Value &result) const override;
 };

@@ -74,3 +74,14 @@ RC DateType::to_string(const Value &val, string &result) const
   result = ss.str();
   return RC::SUCCESS;
 }
+RC DateType::data_max(const Value &left, const Value &right, Value &result)const
+{
+  result.set_int(std::max(left.get_int(), right.get_int()));
+  return RC::SUCCESS;
+}
+
+RC DateType::data_min(const Value &left, const Value &right, Value &result)const
+{
+  result.set_int(std::min(left.get_int(), right.get_int()));
+  return RC::SUCCESS;
+}

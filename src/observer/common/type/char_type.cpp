@@ -53,3 +53,24 @@ RC CharType::to_string(const Value &val, string &result) const
   result = ss.str();
   return RC::SUCCESS;
 }
+RC CharType::data_max(const Value &left, const Value &right, Value &result)const
+{
+  int cmp=compare(left, right);
+  if(cmp<0){
+    result.set_string(right.get_string().c_str());
+  }else{
+    result.set_string(left.get_string().c_str());
+  }
+  return RC::SUCCESS;
+}
+
+RC CharType::data_min(const Value &left, const Value &right, Value &result)const
+{
+  int cmp=compare(left, right);
+  if(cmp<0){
+    result.set_string(left.get_string().c_str());
+  }else{
+    result.set_string(right.get_string().c_str());
+  }
+  return RC::SUCCESS;
+}
