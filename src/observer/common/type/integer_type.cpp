@@ -103,7 +103,7 @@ RC IntegerType::cast_to(const Value &val, AttrType type, Value &result) const{
   switch (type) {
     case  AttrType::FLOATS:{
       result.set_type(AttrType::FLOATS);
-      result.set_float((float)result.get_int());
+      result.set_float((float)val.get_int());
       return RC::SUCCESS;
     }
     default: return RC::UNIMPLEMENTED;
