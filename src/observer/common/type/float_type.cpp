@@ -94,3 +94,10 @@ RC FloatType::data_min(const Value &left, const Value &right, Value &result)cons
   result.set_float(std::min(left.get_float(), right.get_float()));
   return RC::SUCCESS;
 }
+
+int FloatType::cast_cost(AttrType type){
+  if(type==attr_type_){
+    return 0;
+  }
+  return INT32_MAX;
+}

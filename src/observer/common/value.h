@@ -149,12 +149,12 @@ public:
   float  get_float() const;
   string get_string() const;
   bool   get_boolean() const;
+  
+
+public:
+  void set_float(float val);
   void set_date(int date);
   void set_int(int val);
-
-private:
-  void set_float(float val);
-  
   void set_string(const char *s, int len = 0);
   void set_string_from_other(const Value &other);
   
