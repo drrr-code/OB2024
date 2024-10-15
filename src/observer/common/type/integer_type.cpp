@@ -88,7 +88,7 @@ RC IntegerType::data_min(const Value &left, const Value &right, Value &result)co
 RC IntegerType::divide(const Value &left, const Value &right, Value &result) const
 {
   ASSERT(right.get_int()!=0,"count num is 0");
-  result.set_float(left.get_int() / right.get_int());
+  result.set_float(left.get_int() / (float)right.get_int());
   return RC::SUCCESS;
 }
 int IntegerType::cast_cost(AttrType type){
